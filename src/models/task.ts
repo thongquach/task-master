@@ -25,6 +25,7 @@ const taskSchema = new Schema(
       toJSON() {
         const task = this as ITask;
         const taskObject = task.toObject();
+        delete taskObject.user;
         return taskObject;
       },
     },

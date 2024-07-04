@@ -11,7 +11,7 @@ export const createTask = async (task: Partial<ITask>) => {
 
   const newTask = new Task({ title, description, status: "todo", user });
   await newTask.save();
-  return newTask;
+  return { task: newTask };
 };
 
 export const getTasks = async (user?: Types.ObjectId) => {
@@ -40,7 +40,7 @@ export const updateTask = async (task: Partial<ITask>) => {
   existingTask.title = title || existingTask.title;
   existingTask.description = description || existingTask.description;
   existingTask.status = status || existingTask.status;
-  await existingTask.save();
 
-  return existingTask;
+  await existingTask.save();
+  return { task: existingTask };
 };

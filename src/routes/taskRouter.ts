@@ -15,9 +15,9 @@ router.post("/create", auth, async (req: CustomRequest, res) => {
     description: req.body.description,
     user: req.user!._id,
   };
-  const registeredUser = await createTask(taskData);
+  const newTask = await createTask(taskData);
 
-  return res.status(200).json(registeredUser);
+  return res.status(200).json(newTask);
 });
 
 router.get("/", auth, async (req: CustomRequest, res) => {
@@ -35,10 +35,8 @@ router.post("/update", auth, async (req: CustomRequest, res) => {
   };
   const updatedTask = await updateTask(taskData);
 
-  // @ts-ignore
   if (updatedTask?.error) {
     return res.status(400).json({
-      // @ts-ignore
       error: updatedTask.error,
     });
   }
