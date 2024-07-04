@@ -1,7 +1,8 @@
 import express from 'express';
+
+import authMiddleware, { CustomRequest } from '../middleware/auth';
 import { IUser } from '../models/user';
 import { loginUser, registerUser } from '../services/userService';
-import authMiddleware, { CustomRequest } from '../middleware/auth';
 
 const router = express.Router();
 

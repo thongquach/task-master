@@ -1,7 +1,8 @@
 import express from 'express';
+
+import { CustomRequest } from '../middleware/auth';
 import { ITask } from '../models/task';
 import { createTask, getTasks, updateTask } from '../services/taskService';
-import { CustomRequest } from '../middleware/auth';
 
 const router = express.Router();
 

@@ -1,8 +1,10 @@
 import './db/db';
+
 import express from 'express';
-import userRouter from './routers/userRouter';
-import taskRouter from './routers/taskRouter';
+
 import authMiddleware from './middleware/auth';
+import taskRouter from './routers/taskRouter';
+import userRouter from './routers/userRouter';
 
 const port = process.env.PORT || 3000;
 

@@ -1,6 +1,6 @@
-import { Schema, model, Document, Model, HydratedDocument, Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Document, HydratedDocument, Model, model,Schema,Types } from 'mongoose';
 
 // structure of a user document in the database
 export interface IUser extends Document<Types.ObjectId> {

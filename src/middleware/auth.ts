@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+
 import User, { IUser } from '../models/user';
 
 // extends the default Express Request interface to include additional properties user and token
