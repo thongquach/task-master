@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import Task, { ITask } from "../models/task";
 
 export const createTask = async (task: Partial<ITask>) => {
@@ -11,4 +12,8 @@ export const createTask = async (task: Partial<ITask>) => {
   const newTask = new Task({ title, description, status: "todo", user });
   await newTask.save();
   return newTask;
+};
+
+export const getTasks = async (user?: Types.ObjectId) => {
+  return Task.find({ user });
 };
