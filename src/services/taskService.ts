@@ -15,6 +15,10 @@ export const createTask = async (task: Partial<ITask>) => {
   return { task: newTask };
 };
 
+export const getTask = async (taskId: Types.ObjectId, user?: Types.ObjectId) => {
+  return Task.findOne({ _id: taskId, user });
+};
+
 export const getTasks = async (user?: Types.ObjectId) => {
   return Task.find({ user });
 };
@@ -38,10 +42,23 @@ export const updateTask = async (task: Partial<ITask>) => {
     };
   }
 
-  existingTask.title = title || existingTask.title;
-  existingTask.description = description || existingTask.description;
-  existingTask.status = status || existingTask.status;
+  existingTask.title = title ?? existingTask.title;
+  existingTask.description = description ?? existingTask.description;
+  existingTask.status = status ?? existingTask.status;
 
   await existingTask.save();
   return { task: existingTask };
+};
+
+export const deleteTask = async (taskId: Types.ObjectId, user?: Types.ObjectId) => {
+  const task = await Task.findOne({ _id: taskId, user });
+
+  if (!task) {
+    return {
+      error: 'Task not found or you are not authorized to delete this task.',
+    };
+  }
+
+  await task.deleteOne();
+  return { success: true };
 };

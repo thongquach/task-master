@@ -1,14 +1,15 @@
 import express from 'express';
+import { Types } from 'mongoose';
 
 import { CustomRequest } from '../middleware/auth';
 import { ITask } from '../models/task';
-import { createTask, getTasks, updateTask } from '../services/taskService';
+import { createTask, deleteTask, getTask, getTasks, updateTask } from '../services/taskService';
 
 const router = express.Router();
 
 // TODO: middleware to validate user input: type/format/required using library utilizing schema
 // TODO: swagger docs
-router.post('/create', async (req: CustomRequest, res) => {
+router.post('/', async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
     title: req.body.title,
     description: req.body.description,
@@ -21,17 +22,18 @@ router.post('/create', async (req: CustomRequest, res) => {
 
 router.get('/', async (req: CustomRequest, res) => {
   const tasks = await getTasks(req.user!._id);
-  return res.status(200).json(tasks);
+  return res.status(200).json({ tasks });
 });
 
-// TODO: update to put with URI
-// GET /api/task/1234
-// PUT /api/task/11232
-// DELETE /api/task/12323
-// POST /api/task
-router.post('/update', async (req: CustomRequest, res) => {
+router.get('/:taskId', async (req: CustomRequest, res) => {
+  const taskId = new Types.ObjectId(req.params.taskId);
+  const task = await getTask(taskId, req.user!._id);
+  return res.status(200).json({ task });
+});
+
+router.put('/:taskId', async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
-    _id: req.body._id,
+    _id: new Types.ObjectId(req.params.taskId),
     title: req.body.title,
     description: req.body.description,
     status: req.body.status,
@@ -48,6 +50,19 @@ router.post('/update', async (req: CustomRequest, res) => {
   }
 
   return res.status(200).json(updatedTask);
+});
+
+router.delete('/:taskId', async (req: CustomRequest, res) => {
+  const taskId = new Types.ObjectId(req.params.taskId);
+  const deletedTask = await deleteTask(taskId, req.user!._id);
+
+  if (deletedTask?.error) {
+    return res.status(400).json({
+      error: deletedTask.error,
+    });
+  }
+
+  return res.status(200).json(deletedTask);
 });
 
 export default router;
