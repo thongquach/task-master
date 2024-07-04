@@ -21,6 +21,7 @@ router.get("/", async (req: CustomRequest, res) => {
   return res.status(200).json(tasks);
 });
 
+// TODO: update to put with URI
 router.post("/update", async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
     _id: req.body._id,
@@ -31,6 +32,8 @@ router.post("/update", async (req: CustomRequest, res) => {
   };
   const updatedTask = await updateTask(taskData);
 
+  // TODO: add error handling middleware with custom error class
+  // UnauthorizedError -> 403, Unauthenticated -> 401, NotFoundError -> 404
   if (updatedTask?.error) {
     return res.status(400).json({
       error: updatedTask.error,
