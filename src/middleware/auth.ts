@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import User, { IUser } from "../models/user";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import User, { IUser } from '../models/user';
 
 // extends the default Express Request interface to include additional properties user and token
 export interface CustomRequest extends Request {
@@ -13,29 +13,24 @@ interface DecodedToken {
   _id: string;
 }
 
-const authMiddleware = async (
-  req: CustomRequest,
-  res: Response,
-  next: NextFunction
-) => {
+// TODO: validate user input
+// TODO: handle token expiration
+const authMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
+    const token = req.header('Authorization')?.replace('Bearer ', '');
     console.log(token);
     if (!token) {
-      throw new Error("Authentication failed. Token missing.");
+      throw new Error('Authentication failed. Token missing.');
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_KEY as string
-    ) as DecodedToken;
+    const decoded = jwt.verify(token, process.env.JWT_KEY as string) as DecodedToken;
     const user = await User.findOne({
       _id: decoded._id,
-      "tokens.token": token,
+      'tokens.token': token,
     });
 
     if (!user) {
-      throw new Error("Authentication failed. User not found.");
+      throw new Error('Authentication failed. User not found.');
     }
 
     // attaches the authenticated user and token to the request object (req.user and req.token), making them available to subsequent middleware functions
@@ -43,7 +38,7 @@ const authMiddleware = async (
     req.token = token;
     next();
   } catch (error) {
-    res.status(401).send({ error: "Authentication failed." });
+    res.status(401).send({ error: 'Authentication failed.' });
   }
 };
 

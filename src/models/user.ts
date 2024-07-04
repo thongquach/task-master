@@ -1,13 +1,6 @@
-import {
-  Schema,
-  model,
-  Document,
-  Model,
-  HydratedDocument,
-  Types,
-} from "mongoose";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { Schema, model, Document, Model, HydratedDocument, Types } from 'mongoose';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 // structure of a user document in the database
 export interface IUser extends Document<Types.ObjectId> {
@@ -24,11 +17,8 @@ export interface IUserMethods {
 }
 
 //  extends the Mongoose Model interface and specifies additional methods available on the User model
-interface UserModel extends Model<IUser, {}, IUserMethods> {
-  findByCredentials(
-    email: string,
-    password: string
-  ): Promise<HydratedDocument<IUser, IUserMethods>>;
+interface UserModel extends Model<IUser, Record<string, never>, IUserMethods> {
+  findByCredentials(email: string, password: string): Promise<HydratedDocument<IUser, IUserMethods>>;
 }
 
 // schema for the User model
@@ -40,8 +30,8 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 });
 
 //  middleware function used to hash the user's password before saving it to the database
-userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 8);
   }
   next();
@@ -49,11 +39,9 @@ userSchema.pre("save", async function (next) {
 
 // Instance method handles token generation for authentication
 userSchema.methods.generateAuthToken = async function () {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
-  const token = jwt.sign(
-    { _id: user._id.toString() },
-    process.env.JWT_KEY as string
-  );
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_KEY as string);
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
@@ -82,6 +70,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
 };
 
 // model creation
-const User = model<IUser, UserModel>("User", userSchema);
+const User = model<IUser, UserModel>('User', userSchema);
 
 export default User;

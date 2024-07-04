@@ -1,11 +1,13 @@
-import express from "express";
-import { ITask } from "../models/task";
-import { createTask, getTasks, updateTask } from "../services/taskService";
-import { CustomRequest } from "../middleware/auth";
+import express from 'express';
+import { ITask } from '../models/task';
+import { createTask, getTasks, updateTask } from '../services/taskService';
+import { CustomRequest } from '../middleware/auth';
 
 const router = express.Router();
 
-router.post("/create", async (req: CustomRequest, res) => {
+// TODO: middleware to validate user input: type/format/required using library utilizing schema
+// TODO: swagger docs
+router.post('/create', async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
     title: req.body.title,
     description: req.body.description,
@@ -16,13 +18,17 @@ router.post("/create", async (req: CustomRequest, res) => {
   return res.status(200).json(newTask);
 });
 
-router.get("/", async (req: CustomRequest, res) => {
+router.get('/', async (req: CustomRequest, res) => {
   const tasks = await getTasks(req.user!._id);
   return res.status(200).json(tasks);
 });
 
 // TODO: update to put with URI
-router.post("/update", async (req: CustomRequest, res) => {
+// GET /api/task/1234
+// PUT /api/task/11232
+// DELETE /api/task/12323
+// POST /api/task
+router.post('/update', async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
     _id: req.body._id,
     title: req.body.title,

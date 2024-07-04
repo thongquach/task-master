@@ -1,17 +1,17 @@
-import User, { IUser } from "../models/user";
+import User, { IUser } from '../models/user';
 
 export const registerUser = async (user: Partial<IUser>) => {
   const { name, email, password } = user;
   if (!name || !email || !password) {
     return {
-      error: "Please provide all the required fields",
+      error: 'Please provide all the required fields',
     };
   }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return {
-      error: "User with that email already exists.",
+      error: 'User with that email already exists.',
     };
   }
 
@@ -28,7 +28,7 @@ export const loginUser = async (user: Partial<IUser>) => {
   const { email, password } = user;
   if (!email || !password) {
     return {
-      error: "Please provide all the required fields",
+      error: 'Please provide all the required fields',
     };
   }
 
