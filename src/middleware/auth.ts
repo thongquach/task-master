@@ -16,6 +16,7 @@ interface DecodedToken {
 const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
+    console.log(token);
     if (!token) {
       throw new Error("Authentication failed. Token missing.");
     }

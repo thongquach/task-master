@@ -1,9 +1,16 @@
-import { Schema, model, Document, Model, HydratedDocument } from "mongoose";
+import {
+  Schema,
+  model,
+  Document,
+  Model,
+  HydratedDocument,
+  Types,
+} from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 // structure of a user document in the database
-export interface IUser extends Document {
+export interface IUser extends Document<Types.ObjectId> {
   name: string;
   email: string;
   password: string;
@@ -44,7 +51,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
-    { _id: (user._id as number).toString() },
+    { _id: user._id.toString() },
     process.env.JWT_KEY as string
   );
   user.tokens = user.tokens.concat({ token });
@@ -73,6 +80,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   }
   return user;
 };
+
 // model creation
 const User = model<IUser, UserModel>("User", userSchema);
 

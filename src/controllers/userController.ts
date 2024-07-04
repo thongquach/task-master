@@ -1,5 +1,4 @@
-import User from "../models/user";
-import { IUser } from "../models/user";
+import User, { IUser } from "../models/user";
 
 export const registerUser = async (user: Partial<IUser>) => {
   const { name, email, password } = user;
