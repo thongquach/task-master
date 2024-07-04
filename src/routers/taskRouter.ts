@@ -1,15 +1,11 @@
 import express from "express";
 import { ITask } from "../models/task";
-import {
-  createTask,
-  getTasks,
-  updateTask,
-} from "../controllers/taskController";
-import auth, { CustomRequest } from "../middleware/auth";
+import { createTask, getTasks, updateTask } from "../services/taskService";
+import { CustomRequest } from "../middleware/auth";
 
 const router = express.Router();
 
-router.post("/create", auth, async (req: CustomRequest, res) => {
+router.post("/create", async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
     title: req.body.title,
     description: req.body.description,
@@ -20,12 +16,12 @@ router.post("/create", auth, async (req: CustomRequest, res) => {
   return res.status(200).json(newTask);
 });
 
-router.get("/", auth, async (req: CustomRequest, res) => {
+router.get("/", async (req: CustomRequest, res) => {
   const tasks = await getTasks(req.user!._id);
   return res.status(200).json(tasks);
 });
 
-router.post("/update", auth, async (req: CustomRequest, res) => {
+router.post("/update", async (req: CustomRequest, res) => {
   const taskData: Partial<ITask> = {
     _id: req.body._id,
     title: req.body.title,

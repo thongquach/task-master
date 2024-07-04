@@ -13,7 +13,11 @@ interface DecodedToken {
   _id: string;
 }
 
-const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
+const authMiddleware = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");
     console.log(token);
@@ -43,4 +47,4 @@ const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   }
 };
 
-export default auth;
+export default authMiddleware;
