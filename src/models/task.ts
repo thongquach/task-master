@@ -2,7 +2,7 @@ import { Schema, model, Document, Types } from "mongoose";
 
 type TaskStatus = "todo" | "in-progress" | "blocked" | "done";
 
-export interface ITask extends Document {
+export interface ITask extends Document<Types.ObjectId> {
   title: string;
   status: TaskStatus;
   user: Types.ObjectId;
@@ -26,11 +26,6 @@ const taskSchema = new Schema(
         const task = this as ITask;
         const taskObject = task.toObject();
         return taskObject;
-      },
-    },
-    query: {
-      byUserId(userId: Types.ObjectId) {
-        return this.find({ userId });
       },
     },
   }
